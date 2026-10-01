@@ -1,0 +1,52 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+*.egg-info/
+
+# ===== Jupyter / Kaggle =====
+.ipynb_checkpoints/
+
+# ===== Datasets (link to Kaggle in README instead) =====
+data/
+datasets/
+*.zip
+
+# ===== Model files (too large for GitHub) =====
+*.pte
+*.pt
+*.pth
+*.onnx
+*.hef
+*.bin
+*.safetensors
+checkpoints/
+
+# ===== Raspberry Pi captures and logs =====
+captures/
+*.log
+
+# ===== iOS / Xcode =====
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.ipa
+
+# ===== Arduino =====
+arduino/**/build/
+
+# ===== Secrets =====
+.env
+*.key
+secrets.json
+
+# ===== System files =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Office temporary files =====
+~$*
