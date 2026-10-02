@@ -1,15 +1,23 @@
 """
 server.py - VERDE Pi backend
-Receives scan requests from the app and returns the result as JSON.
-Version 1: returns fixed dummy data in the final format, so the app
-can be built and tested before the classifier and Llama are ready.
+Receives scan requests from the app, takes a photo and returns the result as JSON.
+Version 2: takes a real photo on every scan, but still returns dummy data
+until the classifier and Llama are ready.
 """
+
+import threading
+from datetime import datetime
 
 from flask import Flask, jsonify
 
+import camera
 import config
 
 app = Flask(__name__)
+
+# WHY: the camera can only be used by one request at a time. The lock makes
+# a second scan wait for the first instead of crashing with "camera in use".
+camera_lock = threading.Lock()
 
 
 @app.get("/health")
@@ -20,10 +28,18 @@ def health():
 
 @app.post("/scan")
 def scan():
-    """Return a scan result. Dummy values for now."""
-    # WHY: this is the agreed JSON contract between the Pi and the app.
-    # Later steps replace the dummy values with real ones, but the
-    # field names stay the same, so the app never needs to change.
+    """Take a photo, then return a scan result (dummy values for now)."""
+    config.SAVE_DIR.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    with camera_lock:
+        photo = camera.capture_photo()
+    model_image = camera.to_model_input(photo)
+
+    model_image.save(config.SAVE_DIR / f"scan_{stamp}_224.jpg")
+
+    # TODO (weeks 3-5): pass model_image to the classifier and Llama.
+    # The field names below are the contract with the app and must not change.
     result = {
         "label": "Plastic",
         "confidence": 0.93,
