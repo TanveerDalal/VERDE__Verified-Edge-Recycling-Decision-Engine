@@ -1,57 +1,54 @@
 package com.verde.app.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = VerdeGreenDark,
+    onPrimary = Color(0xFF0B2E12),             // dark green text on light-green buttons
+    secondary = VerdeTealDark,
+    onSecondary = Color(0xFF00201C),
+    tertiary = VerdeAmberDark,
+    onTertiary = Color(0xFF261A00),
+    background = VerdeBackgroundDark,
+    surface = VerdeSurfaceDark,
+    surfaceVariant = Color(0xFF243328),
+    onSurfaceVariant = Color(0xFFBFCABF),
+    surfaceContainer = Color(0xFF1B281E),
+    surfaceContainerHigh = Color(0xFF1F2D23),
+    surfaceContainerHighest = Color(0xFF243328), // cards
+    outline = Color(0xFF89938A)                  // text field and button borders
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    primary = VerdeGreen,
     onPrimary = Color.White,
+    secondary = VerdeTeal,
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    tertiary = VerdeAmber,
+    onTertiary = Color(0xFF261A00),
+    background = VerdeBackground,
+    surface = Color.White,
+    surfaceVariant = Color(0xFFDDE5DA),
+    onSurfaceVariant = Color(0xFF414941),
+    surfaceContainer = Color(0xFFEEF5EC),
+    surfaceContainerHigh = Color(0xFFE9F0E7),
+    surfaceContainerHighest = Color(0xFFE3EBE1), // cards
+    outline = Color(0xFF717970)
 )
 
+// VERDE always uses its own colours: light or dark depending on the phone's setting
 @Composable
 fun VERDETheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
         content = content
     )

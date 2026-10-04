@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.verde.app.camera.CameraScreen
 import com.verde.app.ui.theme.VERDETheme
+import com.verde.app.pi.PiScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             VERDETheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CameraScreen(modifier = Modifier.padding(innerPadding))
+                    PiScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
