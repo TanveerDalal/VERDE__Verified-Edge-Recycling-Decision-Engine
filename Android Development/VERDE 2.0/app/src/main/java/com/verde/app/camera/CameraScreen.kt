@@ -115,7 +115,13 @@ private fun CameraPreview(modifier: Modifier = Modifier) {
 
     // Background thread for image processing, so the screen never freezes
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
-    DisposableEffect(Unit) { onDispose { cameraExecutor.shutdown() } }
+    DisposableEffect(Unit) {
+        onDispose {
+            cameraExecutor.shutdown()
+            // Turn the camera off when leaving this screen (battery + privacy)
+            ProcessCameraProvider.getInstance(context).get().unbindAll()
+        }
+    }
 
     var result by remember { mutableStateOf<PhoneCaptureResult?>(null) }
     var isCapturing by remember { mutableStateOf(false) }
