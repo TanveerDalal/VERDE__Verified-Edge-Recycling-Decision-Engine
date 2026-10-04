@@ -1,45 +1,82 @@
 """
 camera.py - VERDE Pi backend
-Captures one photo with the Camera Module 3 and prepares a 224x224 square
-copy for the vision model.
+Keeps the Camera Module 3 running so that:
+  - a small live preview can be streamed to the phone (lores stream)
+  - scans grab a full-size frame instantly (main stream)
 """
 
+import io
+import threading
 import time
-from datetime import datetime
-from pathlib import Path
 
 from libcamera import controls
 from picamera2 import Picamera2
+from picamera2.encoders import JpegEncoder
+from picamera2.outputs import FileOutput
 
-# WHAT: Settings in one place.
-# WHY:  The model expects 224x224 (see Section 10 of the data analysis).
-#       Photos are saved outside the code folder so they never reach GitHub.
-MODEL_SIZE = 224
-CAPTURE_SIZE = (2304, 1296)  # 16:9 mode that the camera supports
-SAVE_DIR = Path.home() / "projects" / "verde" / "captures"
+from config import CAPTURE_SIZE, MODEL_SIZE, PREVIEW_QUALITY, PREVIEW_SIZE, SAVE_DIR
 
 
-def capture_photo():
-    """Take one full-size photo and return it as a PIL image."""
-    picam2 = Picamera2()
+class PreviewBuffer(io.BufferedIOBase):
+    """Holds the latest preview JPEG and wakes up anyone waiting for a new one."""
 
-    # HOW: configure for a still photo, start the camera, then let
-    # autofocus and exposure settle for 2 seconds before capturing.
-    picam2.configure(picam2.create_still_configuration(main={"size": CAPTURE_SIZE}))
-    picam2.start()
-    picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
-    time.sleep(2)
+    def __init__(self):
+        self.frame = None
+        self.condition = threading.Condition()
 
-    image = picam2.capture_image("main")
-    picam2.stop()
-    picam2.close()
-    return image
+    def write(self, buf):
+        with self.condition:
+            self.frame = buf
+            self.condition.notify_all()
+
+
+class VerdeCamera:
+    """One camera, started once, shared by the preview stream and scans."""
+
+    def __init__(self):
+        self.picam2 = None
+        self.preview = PreviewBuffer()
+        self.lock = threading.Lock()
+
+    def start(self):
+        self.picam2 = Picamera2()
+        # WHY two streams: "main" is full size for scans,
+        # "lores" is small for the live preview.
+        config = self.picam2.create_video_configuration(
+            main={"size": CAPTURE_SIZE, "format": "RGB888"},
+            lores={"size": PREVIEW_SIZE},
+        )
+        self.picam2.configure(config)
+        self.picam2.start()
+        # Camera Module 3 has autofocus: keep refocusing as items move
+        self.picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+        # Encode the small stream as JPEG frames for the phone
+        self.picam2.start_encoder(
+            JpegEncoder(q=PREVIEW_QUALITY), FileOutput(self.preview), name="lores"
+        )
+        time.sleep(2)  # let focus and exposure settle ONCE, at startup
+
+    def capture(self):
+        """Grab the current full-size frame from the running camera."""
+        with self.lock:  # one scan at a time
+            return self.picam2.capture_image("main")
+
+    def wait_for_preview_frame(self):
+        """Block until the next preview JPEG is ready, then return it."""
+        with self.preview.condition:
+            self.preview.condition.wait()
+            return self.preview.frame
+
+    def stop(self):
+        if self.picam2:
+            self.picam2.stop_encoder()
+            self.picam2.stop()
+            self.picam2.close()
 
 
 def to_model_input(image, size=MODEL_SIZE):
     """Centre-crop to a square, then shrink to size x size."""
     # WHY crop first: the camera is 16:9 and the model input is square.
-    # Resizing directly would stretch the item and distort its shape.
     width, height = image.size
     side = min(width, height)
     left = (width - side) // 2
@@ -49,11 +86,13 @@ def to_model_input(image, size=MODEL_SIZE):
 
 
 if __name__ == "__main__":
+    # Quick test: start the camera, capture once, report the time
     SAVE_DIR.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    photo = capture_photo()
-    photo.save(SAVE_DIR / f"verde_{stamp}_full.jpg")
-    to_model_input(photo).save(SAVE_DIR / f"verde_{stamp}_224.jpg")
-
-    print(f"Saved to {SAVE_DIR}: full size {photo.size} and a {MODEL_SIZE}x{MODEL_SIZE} copy")
+    cam = VerdeCamera()
+    cam.start()
+    t = time.perf_counter()
+    photo = cam.capture()
+    ms = (time.perf_counter() - t) * 1000
+    to_model_input(photo).save(SAVE_DIR / "test_224.png")
+    print(f"Captured {photo.size} in {ms:.0f} ms (camera already running)")
+    cam.stop()
