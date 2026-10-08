@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Verde is always dark, so it uses the dark Material 3 theme in day and night mode -->
+    <style name="Base.Theme.VERDE" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Dark window colour so there's no white flash while a screen opens -->
+        <item name="android:windowBackground">@color/verde_bg_top</item>
+    </style>
+
+    <style name="Theme.VERDE" parent="Base.Theme.VERDE" />
+</resources>

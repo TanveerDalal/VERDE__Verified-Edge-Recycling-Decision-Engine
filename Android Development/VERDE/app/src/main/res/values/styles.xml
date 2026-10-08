@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base for all Verde styles. Needed because names like "Verde.Chip"
+         automatically inherit from a style called "Verde". -->
+    <style name="Verde" />
+
+    <!-- Big green button -->
+    <style name="Verde.Button" parent="Widget.Material3.Button">
+        <item name="android:layout_height">54dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/verde_dark</item>
+        <item name="backgroundTint">@color/verde_green</item>
+        <item name="iconTint">@color/verde_dark</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">10dp</item>
+        <item name="iconSize">20dp</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <!-- Dark outlined button -->
+    <style name="Verde.Button.Secondary">
+        <item name="android:textColor">@color/verde_text_main</item>
+        <item name="backgroundTint">@color/verde_button_secondary</item>
+        <item name="strokeColor">@color/verde_button_stroke</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Round 44dp icon button (close, flash, back) -->
+    <style name="Verde.IconButton">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:background">@drawable/bg_circle_button</item>
+        <item name="tint">@color/verde_text_main</item>
+    </style>
+
+    <!-- Outlined chip ("It's Paper", "Other…") -->
+    <style name="Verde.Chip">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">34dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:background">@drawable/bg_outline_chip</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:textColor">@color/verde_text_main</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!-- Pi camera / Phone camera option -->
+    <style name="Verde.Toggle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- One bottom-navigation tab -->
+    <style name="Verde.NavItem">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:drawablePadding">3dp</item>
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <!-- Quick-reply chip in the Ask chat -->
+    <style name="Verde.ChatChip">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:background">@drawable/bg_chat_chip</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:textColor">@color/verde_green_soft</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+</resources>

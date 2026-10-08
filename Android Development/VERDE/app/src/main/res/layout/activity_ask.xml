@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ask tab: WhatsApp-style chat with Verde -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/verde_chat_bg"
+    android:orientation="vertical">
+
+    <!-- Header: avatar, name, status, camera -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/verde_chat_header"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="4dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="10dp">
+
+        <!-- Back arrow: returns to the Scan tab -->
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_back"
+            android:src="@drawable/ic_back"
+            app:tint="@color/verde_text_main" />
+
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="4dp">
+
+            <FrameLayout
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_avatar">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_leaf"
+                    app:tint="@color/verde_dark" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="bottom|end"
+                android:background="@drawable/bg_online_dot" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ask_name"
+                android:textColor="@color/verde_text_main"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ask_online"
+                android:textColor="@color/verde_green_soft"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/cameraButton"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_scan_from_chat"
+            android:src="@drawable/ic_camera"
+            app:tint="@color/verde_toggle_inactive" />
+    </LinearLayout>
+
+    <!-- Messages -->
+    <ScrollView
+        android:id="@+id/chatScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/messages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_day_chip"
+                android:paddingStart="12dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="5dp"
+                android:text="@string/ask_today"
+                android:textColor="@color/verde_text_muted"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Quick replies -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="4dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Opens a real WhatsApp chat with Verde's number -->
+            <TextView
+                android:id="@+id/chipWhatsApp"
+                style="@style/Verde.ChatChip"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:drawablePadding="6dp"
+                android:text="@string/chat_on_whatsapp"
+                app:drawableStartCompat="@drawable/ic_share"
+                app:drawableTint="@color/verde_green_soft" />
+
+            <TextView
+                android:id="@+id/chipBatteries"
+                style="@style/Verde.ChatChip"
+                android:text="@string/chip_batteries" />
+
+            <TextView
+                android:id="@+id/chipGlass"
+                style="@style/Verde.ChatChip"
+                android:text="@string/chip_glass" />
+
+            <TextView
+                android:id="@+id/chipCoffee"
+                style="@style/Verde.ChatChip"
+                android:text="@string/chip_coffee" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Message box + send -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="4dp">
+
+        <EditText
+            android:id="@+id/messageInput"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:autofillHints=""
+            android:background="@drawable/bg_chat_input"
+            android:hint="@string/ask_hint"
+            android:imeOptions="actionSend"
+            android:inputType="textCapSentences"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textColor="@color/verde_text_main"
+            android:textColorHint="@color/verde_text_faint"
+            android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/sendButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_send"
+            android:contentDescription="@string/cd_send"
+            android:src="@drawable/ic_send"
+            app:tint="@color/verde_dark" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/bottomNav"
+        layout="@layout/bottom_nav" />
+</LinearLayout>

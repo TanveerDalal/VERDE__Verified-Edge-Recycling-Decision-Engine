@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From the Android Studio template -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Verde -->
+    <color name="verde_bg_top">#0D1C16</color>
+    <color name="verde_green">#34D168</color>
+    <color name="verde_dark">#06301A</color>
+    <color name="verde_green_soft">#9BEBB6</color>
+    <color name="verde_green_text">#6EE29A</color>
+    <color name="verde_text_main">#EAF5EE</color>
+    <color name="verde_text_muted">#A9C2B5</color>
+    <color name="verde_text_faint">#9DB6A9</color>
+    <color name="verde_tab_inactive">#B7C9BF</color>
+    <color name="verde_toggle_inactive">#C9D8D0</color>
+    <color name="verde_tile_text">#0A1A12</color>
+    <color name="verde_text_advice">#DCE9E1</color>
+    <color name="verde_cube_faint">#33EAF5EE</color>
+    <color name="verde_button_secondary">#14FFFFFF</color>
+    <color name="verde_button_stroke">#24FFFFFF</color>
+    <color name="verde_card_fill">#0FFFFFFF</color>
+
+    <!-- Bin colours: one colour per bin, used everywhere -->
+    <color name="bin_recycling">#7DBBFF</color>
+    <color name="bin_glass">#4FD1C5</color>
+    <color name="bin_food">#34D168</color>
+    <color name="bin_garden">#D9A877</color>
+    <color name="bin_textile">#B48CFF</color>
+    <color name="bin_general">#B4BFB9</color>
+
+    <!-- Pi status -->
+    <color name="verde_offline">#FF9A90</color>
+    <color name="verde_warning">#F5B544</color>
+
+    <!-- Chat (Ask) -->
+    <color name="verde_chat_bg">#0A1611</color>
+    <color name="verde_chat_header">#12271E</color>
+    <color name="verde_read_tick">#7DE2FF</color>
+    <color name="verde_user_meta">#B9E8CC</color>
+</resources>

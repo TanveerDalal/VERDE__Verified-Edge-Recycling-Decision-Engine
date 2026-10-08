@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bottom bar shared by every tab page (added with <include layout="@layout/bottom_nav" />).
+     Colours of the selected tab are set in code by setUpBottomNav(). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="66dp"
+    android:layout_gravity="bottom"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:background="@drawable/bg_nav"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:padding="6dp">
+
+    <TextView
+        android:id="@+id/navScan"
+        style="@style/Verde.NavItem"
+        android:text="@string/nav_scan"
+        app:drawableTopCompat="@drawable/ic_scan" />
+
+    <TextView
+        android:id="@+id/navImpact"
+        style="@style/Verde.NavItem"
+        android:text="@string/nav_impact"
+        app:drawableTopCompat="@drawable/ic_impact" />
+
+    <TextView
+        android:id="@+id/navHistory"
+        style="@style/Verde.NavItem"
+        android:text="@string/nav_history"
+        app:drawableTopCompat="@drawable/ic_history" />
+
+    <TextView
+        android:id="@+id/navAsk"
+        style="@style/Verde.NavItem"
+        android:text="@string/nav_ask"
+        app:drawableTopCompat="@drawable/ic_chat" />
+</LinearLayout>

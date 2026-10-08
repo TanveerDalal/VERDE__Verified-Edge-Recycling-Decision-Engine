@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Which app files Android may back up or transfer (Android 12 and newer). Nothing special for Verde. -->
+<data-extraction-rules>
+    <cloud-backup>
+        <!--
+        <include .../>
+        <exclude .../>
+        -->
+    </cloud-backup>
+    <!--
+    <device-transfer>
+        <include .../>
+        <exclude .../>
+    </device-transfer>
+    -->
+</data-extraction-rules>

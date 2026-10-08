@@ -1,0 +1,138 @@
+<resources>
+    <string name="app_name">Verde</string>
+
+    <!-- Splash -->
+    <string name="splash_tagline">Sort smarter. Waste less.</string>
+    <string name="splash_connecting">Connecting to your Pi camera…</string>
+    <string name="splash_pi_ready">Pi camera connected</string>
+    <string name="splash_pi_no_camera">Pi found, but its camera is missing</string>
+    <string name="splash_pi_offline">Pi not found, you can use your phone camera</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="home_title">What are we sorting today?</string>
+    <string name="source_pi">Pi camera</string>
+    <string name="source_phone">Phone camera</string>
+    <string name="live">LIVE</string>
+    <string name="cd_flip_camera">Switch front and back camera</string>
+    <string name="no_other_camera">This phone has only one camera</string>
+    <string name="feed_pi">Pi camera feed</string>
+    <string name="feed_phone">Phone camera ready</string>
+    <string name="feed_hint">Place the item inside the frame</string>
+    <string name="scan_item">Scan item</string>
+    <string name="last_scan_time">Last scan · %1$s</string>
+    <string name="last_scan_result">%1$s → %2$s</string>
+    <string name="cd_open_last_scan">Open last scan</string>
+
+    <!-- Pi status -->
+    <string name="status_pi_checking">Checking Pi…</string>
+    <string name="status_pi_connected">Pi connected</string>
+    <string name="status_pi_offline">Pi offline</string>
+    <string name="status_pi_no_camera">Pi camera missing</string>
+    <string name="status_phone_camera">Phone camera</string>
+    <string name="feed_pi_offline">Raspberry Pi not connected</string>
+    <string name="feed_pi_no_camera">Pi is connected, but no camera found</string>
+    <string name="pi_not_connected">Can\'t reach the Pi camera. Is the Pi on and on the same Wi-Fi?</string>
+    <string name="pi_no_camera">Connect the camera to the Pi, then tap the status pill</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_needed">Camera permission is needed to scan with your phone</string>
+    <string name="camera_start_failed">Couldn\'t start the camera</string>
+    <string name="photo_failed">Couldn\'t take the photo, please try again</string>
+
+    <!-- Result screen -->
+    <string name="result_title">Scan result</string>
+    <string name="cd_back">Back</string>
+    <string name="captured_photo_label">[Captured photo]</string>
+    <string name="match_format">%1$d%% match</string>
+    <string name="corrected_by_you">Corrected by you</string>
+    <string name="goes_in">Goes in</string>
+    <string name="cd_open_bin_guide">Open bin guide</string>
+    <string name="disposal_advice">Disposal advice</string>
+    <string name="llama_on_device">Llama · on device</string>
+    <string name="not_right">Not right?</string>
+    <string name="its_class">It\'s %1$s</string>
+    <string name="rules_vary">Rules vary by council</string>
+    <string name="ask_verde">Ask Verde</string>
+    <string name="scan_again">Scan again</string>
+    <string name="ask_about_item">How do I dispose of %1$s?</string>
+
+    <!-- Bin guide -->
+    <string name="guide_title">9 classes → UK bins</string>
+    <string name="guide_subtitle">Colour system used on the result screen. Each bin keeps one colour everywhere in the app.</string>
+    <string name="guide_footnote">General UK guidance. Garden waste is often a paid council service, and some councils collect glass separately — check your local council.</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_scan">Scan</string>
+    <string name="nav_impact">Impact</string>
+    <string name="nav_history">History</string>
+    <string name="nav_ask">Ask</string>
+    <string name="nav_coming_soon">Coming soon</string>
+
+    <!-- Ask (chat) -->
+    <string name="ask_name">Verde Assistant</string>
+    <string name="ask_online">online</string>
+    <string name="ask_typing">typing…</string>
+    <string name="ask_typing_bubble">Verde is typing…</string>
+    <string name="ask_today">Today</string>
+    <string name="ask_hint">Message Verde</string>
+    <string name="cd_send">Send</string>
+    <string name="cd_scan_from_chat">Scan an item</string>
+    <string name="chip_batteries">Batteries?</string>
+    <string name="chip_glass">Glass jars?</string>
+    <string name="chip_coffee">Coffee cups?</string>
+    <string name="ask_welcome">Hi! I\'m Verde. Ask me where anything goes, or send me a scan.</string>
+    <string name="answer_class_format">%1$s → %2$s. %3$s</string>
+    <string name="answer_batteries">Never put batteries in a bin, they can start fires. Take them to a battery drop-off point; most supermarkets have one.</string>
+    <string name="answer_pizza">Only the clean parts. Tear off the greasy bits for food or general waste, then recycle the clean lid.</string>
+    <string name="answer_coffee_cup">Most takeaway cups have a plastic lining, so they need a cup recycling point, not your home bin. The plastic lid can usually go in recycling.</string>
+    <string name="answer_crisps">Not in most household recycling. Many supermarkets have soft-plastic drop-off points instead.</string>
+    <string name="answer_electronics">Electronics and cables shouldn\'t go in any bin. Take them to a household recycling centre or an electrical drop-off point.</string>
+    <string name="answer_hello">Hello! Ask me about any item, or tap the camera to scan it.</string>
+    <string name="answer_unknown">I\'m not sure about that one. Scan it and I\'ll tell you which bin it belongs in.</string>
+
+    <!-- The 9 waste classes -->
+    <string name="class_cardboard">Cardboard</string>
+    <string name="class_paper">Paper</string>
+    <string name="class_plastic">Plastic</string>
+    <string name="class_metal">Metal</string>
+    <string name="class_glass">Glass</string>
+    <string name="class_food_organics">Food Organics</string>
+    <string name="class_vegetation">Vegetation</string>
+    <string name="class_textile_trash">Textile Trash</string>
+    <string name="class_misc_trash">Misc. Trash</string>
+
+    <!-- Bins (full name / short name) -->
+    <string name="bin_recycling">Recycling bin</string>
+    <string name="bin_recycling_short">Recycling</string>
+    <string name="bin_glass">Glass recycling</string>
+    <string name="bin_glass_short">Glass recycling</string>
+    <string name="bin_food">Food waste caddy</string>
+    <string name="bin_food_short">Food caddy</string>
+    <string name="bin_garden">Garden waste bin</string>
+    <string name="bin_garden_short">Garden waste</string>
+    <string name="bin_textile">Textile bank</string>
+    <string name="bin_textile_short">Textile bank</string>
+    <string name="bin_general">General waste</string>
+    <string name="bin_general_short">General waste</string>
+
+    <!-- Disposal advice (until Llama answers come from the Pi) -->
+    <string name="advice_cardboard">Flatten boxes and remove tape and polystyrene. Keep it dry — wet or greasy cardboard can\'t be recycled.</string>
+    <string name="advice_paper">Keep it clean and dry. Shredded paper, tissues and greasy paper usually aren\'t accepted.</string>
+    <string name="advice_plastic">Empty and rinse bottles, tubs and trays. Soft plastic film often needs a supermarket drop-off.</string>
+    <string name="advice_metal">Rinse cans and tins. Scrunch clean foil into a ball. Empty aerosols are usually accepted.</string>
+    <string name="advice_glass">Rinse bottles and jars and take the lids off. No drinking glasses, Pyrex or window glass.</string>
+    <string name="advice_food_organics">Scrape it into your food caddy. Line it with a compostable bag or newspaper — never plastic.</string>
+    <string name="advice_vegetation">Use your garden waste bin if you have one. No soil, stones, plastic pots or food.</string>
+    <string name="advice_textile_trash">Not for household recycling. Donate wearable items, or take worn-out fabric to a textile bank.</string>
+    <string name="advice_misc_trash">This can\'t be recycled at home. Bag it and put it in your general waste bin.</string>
+
+    <!-- WhatsApp -->
+    <string name="share_whatsapp">Share on WhatsApp</string>
+    <string name="share_result_format">🌿 Verde: %1$s → %2$s. %3$s</string>
+    <string name="chat_on_whatsapp">Chat on WhatsApp</string>
+    <string name="whatsapp_hello">Hi Verde!</string>
+    <string name="whatsapp_not_installed">WhatsApp isn\'t installed on this phone</string>
+</resources>
