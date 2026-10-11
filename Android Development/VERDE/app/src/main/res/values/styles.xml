@@ -95,4 +95,17 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <!-- Amber warning box on the Result screen -->
+    <style name="Verde.WarningBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:background">@drawable/bg_warning_box</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:textColor">@color/verde_warning</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>

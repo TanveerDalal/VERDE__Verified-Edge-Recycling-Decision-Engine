@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "VERDE"
 include(":app")
+ 

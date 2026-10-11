@@ -1,16 +1,17 @@
 plugins {
-    alias(libs.plugins.android.application)          // this is an Android app
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.example.verde"                  // package of your code (R, binding classes)
+    namespace = "com.verde.app"
     compileSdk {
-        version = release(37)                        // Android version used to build
+        version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.verde"          // the app's unique ID on the phone
-        minSdk = 26                                  // works on Android 8.0 and newer
+        applicationId = "com.verde.app"
+        minSdk = 26
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -21,37 +22,46 @@ android {
     buildTypes {
         release {
             optimization {
-                enable = false                       // no code shrinking (simpler for a uni project)
+                enable = false
             }
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-    // View Binding: lets Kotlin use ActivityMainBinding etc.
     buildFeatures {
+        compose = true
         viewBinding = true
     }
 }
 
 dependencies {
-    implementation(libs.androidx.activity.ktx)       // enableEdgeToEdge, permission pop-up
-    implementation(libs.androidx.appcompat)          // AppCompatActivity
-    implementation(libs.androidx.constraintlayout)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
-    implementation(libs.material)                    // MaterialButton, MaterialCardView, Material3 theme
-
-    // CameraX: phone camera (preview + taking photos)
-    val cameraxVersion = "1.6.1"
-    implementation("androidx.camera:camera-core:$cameraxVersion")
-    implementation("androidx.camera:camera-camera2:$cameraxVersion")
-    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
-    implementation("androidx.camera:camera-view:$cameraxVersion")   // PreviewView
-
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
     testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
+    // Added for the XML screens (Splash, Home, Result, Chat, Bin guide)
+    implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("com.google.android.material:material:1.13.0")
+
 }

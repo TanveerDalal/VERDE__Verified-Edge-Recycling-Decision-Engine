@@ -5,7 +5,6 @@
     <string name="splash_tagline">Sort smarter. Waste less.</string>
     <string name="splash_connecting">Connecting to your Pi camera…</string>
     <string name="splash_pi_ready">Pi camera connected</string>
-    <string name="splash_pi_no_camera">Pi found, but its camera is missing</string>
     <string name="splash_pi_offline">Pi not found, you can use your phone camera</string>
 
     <!-- Home -->
@@ -30,12 +29,9 @@
     <string name="status_pi_checking">Checking Pi…</string>
     <string name="status_pi_connected">Pi connected</string>
     <string name="status_pi_offline">Pi offline</string>
-    <string name="status_pi_no_camera">Pi camera missing</string>
     <string name="status_phone_camera">Phone camera</string>
     <string name="feed_pi_offline">Raspberry Pi not connected</string>
-    <string name="feed_pi_no_camera">Pi is connected, but no camera found</string>
     <string name="pi_not_connected">Can\'t reach the Pi camera. Is the Pi on and on the same Wi-Fi?</string>
-    <string name="pi_no_camera">Connect the camera to the Pi, then tap the status pill</string>
 
     <!-- Camera -->
     <string name="camera_permission_needed">Camera permission is needed to scan with your phone</string>
@@ -135,4 +131,16 @@
     <string name="chat_on_whatsapp">Chat on WhatsApp</string>
     <string name="whatsapp_hello">Hi Verde!</string>
     <string name="whatsapp_not_installed">WhatsApp isn\'t installed on this phone</string>
+
+    <!-- Team merge: full Pi result, Pi address, benchmark -->
+    <string name="uncertain_warning">⚠ Verde isn\'t sure about this one. Please check before throwing it away.</string>
+    <string name="warning_line">⚠ %1$s</string>
+    <string name="why_it_matters">Why it matters: %1$s</string>
+    <string name="timing_pi">Pi round trip: %1$d ms</string>
+    <string name="timing_phone">Phone pipeline: %1$d ms</string>
+    <string name="pi_address_title">Pi address</string>
+    <string name="pi_address_hint">The Pi\'s IP address (run hostname -I on the Pi). Phone and Pi must be on the same Wi-Fi or hotspot.</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="benchmark_title">Verde Benchmark</string>
 </resources>

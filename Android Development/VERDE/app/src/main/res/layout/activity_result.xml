@@ -117,6 +117,16 @@
                 android:max="100"
                 android:progressDrawable="@drawable/progress_verde" />
 
+            <!-- "Verde isn't sure" + Pi warnings (hidden when there are none) -->
+            <TextView
+                android:id="@+id/uncertainText"
+                style="@style/Verde.WarningBox"
+                android:text="@string/uncertain_warning" />
+
+            <TextView
+                android:id="@+id/warningsText"
+                style="@style/Verde.WarningBox" />
+
             <!-- Which bin (tap to open the bin guide) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/binCard"
@@ -239,6 +249,16 @@
                     android:lineSpacingExtra="3dp"
                     android:textColor="@color/verde_text_advice"
                     android:textSize="15sp" />
+
+                <!-- Benchmark: how long the scan took (Pi round trip or phone pipeline) -->
+                <TextView
+                    android:id="@+id/timingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/verde_text_faint"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <!-- Correction chips -->

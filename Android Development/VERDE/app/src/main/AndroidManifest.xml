@@ -34,7 +34,7 @@
 
         <!-- 2. Home (Scan tab) -->
         <activity
-            android:name=".ui.home.MainActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="false" />
 
         <!-- 3. Result -->
@@ -52,6 +52,12 @@
         <activity
             android:name=".ui.guide.BinGuideActivity"
             android:exported="false" />
+
+        <!-- 6. Friend's original screens (Compose, unchanged): long-press "Verde" on Home -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/benchmark_title" />
     </application>
 
 </manifest>
