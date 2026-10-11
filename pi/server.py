@@ -2,35 +2,26 @@
 server.py - VERDE Pi backend
   GET  /health  - is the server up?
   GET  /stream  - live MJPEG preview from the Pi camera
-  POST /scan    - capture a photo and return the result, with stage timings
+  POST /scan    - capture a photo, classify it and return the result, with stage timings
 """
 
+import threading
 import time
 from datetime import datetime
 
 from flask import Flask, Response, jsonify
 
+import advice
+import classifier
 from camera import VerdeCamera, to_model_input
 from config import HOST, PORT, SAVE_DIR, SAVE_FULL_PHOTO
 
 app = Flask(__name__)
 camera = VerdeCamera()
 
-# Placeholder until the classifier and Llama are connected
-DUMMY_RESULT = {
-    "label": "Plastic",
-    "confidence": 0.93,
-    "uncertain": False,
-    "bin": "Mixed recycling",
-    "steps": [
-        "Empty any remaining liquid",
-        "Rinse the item quickly",
-        "Put the lid back on",
-        "Place it in the mixed recycling bin",
-    ],
-    "warnings": [],
-    "why_it_matters": "Recycling plastic bottles saves energy and keeps plastic out of landfill.",
-}
+# WHY: /scan can run on several threads at once (threaded=True below).
+# The lock makes a second scan wait instead of calling the model at the same time.
+classify_lock = threading.Lock()
 
 
 @app.get("/health")
@@ -68,16 +59,24 @@ def scan():
     model_input.save(SAVE_DIR / f"pi_{stamp}_224.png")
     t3 = time.perf_counter()
 
+    # Classify the same 224x224 image that was just saved
+    with classify_lock:
+        label, confidence, top3, inference_ms = classifier.classify(model_input)
+
     # Full-size photo for the notebook, saved after timing stops
     if SAVE_FULL_PHOTO:
         photo.save(SAVE_DIR / f"pi_{stamp}.jpg", quality=95)
 
-    result = dict(DUMMY_RESULT)
+    result = advice.build_result(label, confidence)
     result["timings_ms"] = {
         "capture": round((t1 - t0) * 1000, 1),
         "preprocess": round((t2 - t1) * 1000, 1),
         "save": round((t3 - t2) * 1000, 1),
     }
+
+    top3_text = ", ".join(f"{name} {prob:.0%}" for name, prob in top3)
+    print(f"[scan] {label} {confidence:.1%} | top 3: {top3_text} | "
+          f"inference {inference_ms:.1f} ms", flush=True)
     return jsonify(result)
 
 
