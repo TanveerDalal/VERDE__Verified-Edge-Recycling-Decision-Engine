@@ -52,7 +52,8 @@ def classify(image):
     top = torch.topk(probs, 3)
     top3 = [(clean_label(CLASS_NAMES[int(i)]), p.item())
             for p, i in zip(top.values, top.indices)]
-    return top3[0][0], top3[0][1], top3, inference_ms
+    all_probs = {clean_label(CLASS_NAMES[i]): round(float(p), 4) for i, p in enumerate(probs)}
+    return top3[0][0], top3[0][1], top3, inference_ms, all_probs
 
 
 if __name__ == "__main__":

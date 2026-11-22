@@ -66,13 +66,14 @@ def scan():
     t3 = time.perf_counter()
 
     with classify_lock:
-        label, confidence, top3, inference_ms = classifier.classify(model_input)
+        label, confidence, top3, inference_ms, probabilities = classifier.classify(model_input)
 
     # Full-size photo for the notebook, saved after timing stops
     if SAVE_FULL_PHOTO:
         photo.save(SAVE_DIR / f"pi_{stamp}.jpg", quality=95)
 
     result = advice.build_result(label, confidence)
+    result["probabilities"] = probabilities
     result["timings_ms"] = {
         "capture": round((t1 - t0) * 1000, 1),
         "preprocess": round((t2 - t1) * 1000, 1),
@@ -111,12 +112,13 @@ def classify_upload():
     t3 = time.perf_counter()
 
     with classify_lock:
-        label, confidence, top3, inference_ms = classifier.classify(model_input)
+        label, confidence, top3, inference_ms, probabilities = classifier.classify(model_input)
 
     # Keep the original upload untouched (no re-compression) for the notebook
     (PHONE_DIR / f"phone_{stamp}.jpg").write_bytes(data)
 
     result = advice.build_result(label, confidence)
+    result["probabilities"] = probabilities
     result["timings_ms"] = {
         "capture": round((t1 - t0) * 1000, 1),
         "preprocess": round((t2 - t1) * 1000, 1),

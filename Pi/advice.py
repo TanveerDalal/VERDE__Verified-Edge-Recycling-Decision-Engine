@@ -5,7 +5,7 @@ Placeholder until retrieval.py and llm.py generate real advice (weeks 4-5).
 Keys are the 8 model classes. Bin names are generic UK examples; councils differ.
 """
 
-UNCERTAIN_BELOW = 0.70  # provisional; tune it once we have labelled Pi photos
+UNCERTAIN_BELOW = 0.60  # provisional; tune it once we have labelled Pi photos
 
 ADVICE = {
     "food_garden": {
