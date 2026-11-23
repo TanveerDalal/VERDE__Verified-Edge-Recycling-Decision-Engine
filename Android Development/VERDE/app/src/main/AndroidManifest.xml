@@ -10,6 +10,12 @@
     <!-- Talk to the Raspberry Pi over Wi-Fi -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Keep Verde's Llama answering WhatsApp in the background (LlamaService) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <!-- usesCleartextTraffic: the Pi uses plain http:// -->
     <application
         android:allowBackup="true"
@@ -48,6 +54,16 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Impact tab (what your scans add up to) -->
+        <activity
+            android:name=".ui.impact.ImpactActivity"
+            android:exported="false" />
+
+        <!-- History tab (every saved scan) -->
+        <activity
+            android:name=".ui.history.HistoryActivity"
+            android:exported="false" />
+
         <!-- 5. Bin guide -->
         <activity
             android:name=".ui.guide.BinGuideActivity"
@@ -58,6 +74,16 @@
             android:name=".MainActivity"
             android:exported="false"
             android:label="@string/benchmark_title" />
+
+        <!-- 7. Keeps Llama + the port-5001 server running for WhatsApp ("Verde Llama is running") -->
+        <service
+            android:name=".core.LlamaService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="On-device Llama server that answers the user's WhatsApp recycling questions" />
+        </service>
     </application>
 
 </manifest>

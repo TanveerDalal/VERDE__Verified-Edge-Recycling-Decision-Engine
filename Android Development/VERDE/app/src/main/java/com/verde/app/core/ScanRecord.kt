@@ -14,8 +14,13 @@ data class ScanAnswer(
     val steps: List<String> = emptyList(),      // disposal steps
     val warnings: List<String> = emptyList(),   // e.g. "rinse first"
     val whyItMatters: String? = null,
-    val timeMs: Long? = null                    // benchmark: Pi round trip or phone pipeline
+    val timeMs: Long? = null,                   // benchmark: Pi round trip or phone pipeline
+    val guesses: List<Guess> = emptyList(),     // every class with its %, best first (phone model only)
+    val inferenceMs: Long? = null               // ExecuTorch model time alone
 )
+
+/** One of the model's guesses: a class and how sure it is (0–100). */
+data class Guess(val wasteClass: WasteClass, val percent: Int)
 
 /** Turns the Pi's /scan reply into a [ScanAnswer]. */
 fun PiScanOutcome.toAnswer() = ScanAnswer(
@@ -25,7 +30,12 @@ fun PiScanOutcome.toAnswer() = ScanAnswer(
     steps = result.steps.orEmpty(),
     warnings = result.warnings.orEmpty(),
     whyItMatters = result.whyItMatters,
-    timeMs = roundTripMs
+    timeMs = roundTripMs,
+    guesses = result.probabilities.orEmpty()
+        .mapNotNull { (key, p) ->
+            runCatching { Guess(WasteClass.valueOf(key.uppercase()), (p * 100).roundToInt()) }.getOrNull()
+        }
+        .sortedByDescending { it.percent }
 )
 
 /** One saved scan. [id] is the time of the scan (milliseconds), so it's unique and sortable. */
@@ -41,5 +51,7 @@ data class ScanRecord(
 
     /** The user said the AI was wrong: same scan, their class instead. */
     fun correctedTo(newClass: WasteClass) =
-        copy(answer = answer.copy(wasteClass = newClass), corrected = true)
+        copy(answer = answer.copy(wasteClass = newClass, uncertain = false,
+            steps = emptyList(), warnings = emptyList(), whyItMatters = null),   // old advice was for the old class
+            corrected = true)
 }

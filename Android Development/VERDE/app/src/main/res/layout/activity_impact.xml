@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Verde – Impact tab: what your scans add up to (ui/impact/ImpactActivity.kt) -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/impactRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="104dp">
+
+        <LinearLayout
+            android:id="@+id/impactContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:text="@string/impact_title"
+                android:textColor="@color/verde_text_main"
+                android:textSize="26sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/impact_subtitle"
+                android:textColor="@color/verde_text_muted"
+                android:textSize="14sp" />
+
+            <!-- ===== Nothing scanned yet ===== -->
+            <LinearLayout
+                android:id="@+id/emptyCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_hero"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="24dp"
+                android:visibility="gone">
+
+                <FrameLayout
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/bg_logo_large">
+
+                    <ImageView
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_leaf"
+                        app:tint="@color/verde_dark" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:text="@string/impact_empty_title"
+                    android:textColor="@color/verde_text_main"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/impact_empty_text"
+                    android:textColor="@color/verde_text_muted"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/emptyScanButton"
+                    style="@style/Verde.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:text="@string/scan_an_item"
+                    app:icon="@drawable/ic_scan" />
+            </LinearLayout>
+
+            <!-- ===== Everything below is hidden until there is a scan ===== -->
+            <LinearLayout
+                android:id="@+id/statsGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Hero: % kept out of landfill (ring) -->
+                <LinearLayout
+                    android:id="@+id/heroCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_hero"
+                    android:baselineAligned="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="18dp">
+
+                    <FrameLayout
+                        android:layout_width="116dp"
+                        android:layout_height="116dp">
+
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/keptOutRing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:max="100"
+                            app:indicatorColor="@color/verde_green"
+                            app:indicatorSize="116dp"
+                            app:trackColor="#1AFFFFFF"
+                            app:trackCornerRadius="6dp"
+                            app:trackThickness="11dp" />
+
+                        <TextView
+                            android:id="@+id/keptOutPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="sans-serif-black"
+                            android:textColor="@color/verde_text_main"
+                            android:textSize="28sp" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="18dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/impact_ring_label"
+                            android:textColor="@color/verde_green_soft"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/keptOutCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textColor="@color/verde_text_main"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:lineSpacingExtra="1dp"
+                            android:text="@string/impact_kept_out_hint"
+                            android:textColor="@color/verde_text_muted"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- 2 × 2 number tiles -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <include
+                        android:id="@+id/statScans"
+                        layout="@layout/item_stat_tile" />
+
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="0dp" />
+
+                    <include
+                        android:id="@+id/statCo2"
+                        layout="@layout/item_stat_tile" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <include
+                        android:id="@+id/statAi"
+                        layout="@layout/item_stat_tile" />
+
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="0dp" />
+
+                    <include
+                        android:id="@+id/statSpeed"
+                        layout="@layout/item_stat_tile" />
+                </LinearLayout>
+
+                <!-- CO₂ in everyday terms -->
+                <LinearLayout
+                    android:id="@+id/equalCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/impact_equal_title"
+                        android:textColor="@color/verde_text_muted"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/carText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/verde_text_main"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/phoneText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/verde_text_main"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!-- Most common bin + a bar for every bin used -->
+                <LinearLayout
+                    android:id="@+id/binsCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/impact_bins_title"
+                        android:textColor="@color/verde_text_muted"
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/topBinTile"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_tile"
+                            android:gravity="center"
+                            android:textColor="@color/verde_tile_text"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/topBinName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/topBinDetail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textColor="@color/verde_text_muted"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- One row per bin, added in code -->
+                    <LinearLayout
+                        android:id="@+id/binBars"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
+                <!-- Last 7 days -->
+                <LinearLayout
+                    android:id="@+id/weekCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_card"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/impact_week_title"
+                            android:textColor="@color/verde_text_muted"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/streakText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/verde_warning"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <com.verde.app.ui.impact.WeekChartView
+                        android:id="@+id/weekChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="12dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="@string/impact_footnote"
+                    android:textColor="@color/verde_text_faint"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ===== Bottom navigation (shared, see bottom_nav.xml) ===== -->
+    <include
+        android:id="@+id/bottomNav"
+        layout="@layout/bottom_nav" />
+</FrameLayout>

@@ -132,6 +132,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <!-- Switch: Llama on this phone or on the Pi -->
+            <TextView
+                android:id="@+id/chipEngine"
+                style="@style/Verde.ChatChip"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="@string/chip_engine_phone" />
+
             <!-- Opens a real WhatsApp chat with Verde's number -->
             <TextView
                 android:id="@+id/chipWhatsApp"

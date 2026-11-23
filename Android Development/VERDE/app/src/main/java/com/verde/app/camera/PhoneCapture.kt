@@ -46,9 +46,19 @@ fun centreCropSquare(source: Bitmap): Bitmap {
     return Bitmap.createBitmap(source, x, y, side, side)
 }
 
-// Resize a square image to size × size
-fun resizeTo(source: Bitmap, size: Int): Bitmap =
-    Bitmap.createScaledBitmap(source, size, size, true)
+// Resize a square image to size × size. Halving step by step averages 2×2 pixels each time,
+// so fine detail is blended instead of skipped (a single big jump to 224 aliases and blurs).
+fun resizeTo(source: Bitmap, size: Int): Bitmap {
+    var current = source
+    while (current.width / 2 >= size) {
+        val half = Bitmap.createScaledBitmap(current, current.width / 2, current.height / 2, true)
+        if (current !== source) current.recycle()
+        current = half
+    }
+    val result = Bitmap.createScaledBitmap(current, size, size, true)
+    if (current !== source && current !== result) current.recycle()
+    return result
+}
 
 // Turn the image upright (the camera sensor is mounted sideways inside the phone)
 fun rotate(source: Bitmap, degrees: Int): Bitmap {
@@ -62,6 +72,14 @@ fun saveScan(context: Context, bitmap: Bitmap): File {
     val dir = File(context.filesDir, "scans").apply { mkdirs() }
     val file = File(dir, "scan_${System.currentTimeMillis()}.png")
     FileOutputStream(file).use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    return file
+}
+
+// Sharper copy for the Result and History screens (the model still uses the 224×224 image)
+fun saveDisplayCopy(context: Context, bitmap: Bitmap): File {
+    val dir = File(context.filesDir, "scans").apply { mkdirs() }
+    val file = File(dir, "view_${System.currentTimeMillis()}.jpg")
+    FileOutputStream(file).use { bitmap.compress(Bitmap.CompressFormat.JPEG, 92, it) }
     return file
 }
 
@@ -114,6 +132,7 @@ fun capturePhoto(
             // Full-quality photo, saved after timing stops so the benchmark isn't affected.
             // No crop or resize: preprocessing happens later in your Python notebook.
             val fullUpright = rotate(full, rotation)
+            val displayFile = saveDisplayCopy(context, rotate(resizeTo(square, 1024), rotation))
             val capturePath = saveCapture(context, fullUpright)
 
             onResult(
@@ -121,7 +140,7 @@ fun capturePhoto(
                     image = upright,
                     photoWidth = fullUpright.width,
                     photoHeight = fullUpright.height,
-                    file = file,
+                    file = displayFile,
                     capturePath = capturePath,
                     captureMs = (captured - start) / 1_000_000,
                     preprocessMs = (processed - captured) / 1_000_000,

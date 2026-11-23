@@ -218,17 +218,37 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <!-- Scan item button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/scanButton"
-                style="@style/Verde.Button"
+            <!-- Scan item button + pick a photo from the gallery -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/scan_item"
-                android:textSize="17sp"
-                app:cornerRadius="18dp"
-                app:icon="@drawable/ic_scan" />
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/scanButton"
+                    style="@style/Verde.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:text="@string/scan_item"
+                    android:textSize="17sp"
+                    app:cornerRadius="18dp"
+                    app:icon="@drawable/ic_scan" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/galleryButton"
+                    style="@style/Verde.Button.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="@string/gallery_description"
+                    android:text="@string/gallery"
+                    android:textSize="15sp"
+                    app:cornerRadius="18dp"
+                    app:icon="@drawable/ic_gallery"
+                    app:iconTint="@color/verde_text_main" />
+            </LinearLayout>
 
             <!-- Last scan card -->
             <LinearLayout

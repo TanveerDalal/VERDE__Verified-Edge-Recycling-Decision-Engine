@@ -56,8 +56,22 @@
     <string name="ask_about_item">How do I dispose of %1$s?</string>
 
     <!-- Bin guide -->
-    <string name="guide_title">9 classes → UK bins</string>
+    <string name="guide_title">8 classes → UK bins</string>
     <string name="guide_subtitle">Colour system used on the result screen. Each bin keeps one colour everywhere in the app.</string>
+    <!-- Class guide: example items, image counts, accuracy -->
+    <string name="guide_trained_on">Trained on %1$s images. The bar compares how many images each class has.</string>
+    <string name="guide_images_format">%1$s images</string>
+    <string name="guide_accuracy_format">%1$d%% right</string>
+    <string name="guide_accuracy_tbc">tbc</string>
+    <string name="guide_not_sure" formatted="false">Below 60% the result screen says Not sure instead of picking a class.</string>
+    <string name="examples_paper_card">Newspaper, paper, boxes, cartons</string>
+    <string name="examples_plastic">Bottles, tubs, bags, wrappers</string>
+    <string name="examples_metal">Drink cans, food tins, foil trays</string>
+    <string name="examples_glass">Bottles and jars</string>
+    <string name="examples_food_garden">Peelings, leftovers, leaves, grass</string>
+    <string name="examples_textile">Clothes, shoes, socks, fabric</string>
+    <string name="examples_special">Batteries, small electricals, light bulbs</string>
+    <string name="examples_general">Crisp packets, polystyrene, broken ceramics</string>
     <string name="guide_footnote">General UK guidance. Garden waste is often a paid council service, and some councils collect glass separately — check your local council.</string>
 
     <!-- Bottom navigation -->
@@ -89,41 +103,39 @@
     <string name="answer_hello">Hello! Ask me about any item, or tap the camera to scan it.</string>
     <string name="answer_unknown">I\'m not sure about that one. Scan it and I\'ll tell you which bin it belongs in.</string>
 
-    <!-- The 9 waste classes -->
-    <string name="class_cardboard">Cardboard</string>
-    <string name="class_paper">Paper</string>
+    <!-- The 8 waste classes (same as the Pi model) -->
+    <string name="class_paper_card">Paper or cardboard</string>
     <string name="class_plastic">Plastic</string>
     <string name="class_metal">Metal</string>
     <string name="class_glass">Glass</string>
-    <string name="class_food_organics">Food Organics</string>
-    <string name="class_vegetation">Vegetation</string>
-    <string name="class_textile_trash">Textile Trash</string>
-    <string name="class_misc_trash">Misc. Trash</string>
+    <string name="class_food_garden">Food or garden waste</string>
+    <string name="class_textile">Textile</string>
+    <string name="class_special">Batteries or electricals</string>
+    <string name="class_general">General waste</string>
 
     <!-- Bins (full name / short name) -->
-    <string name="bin_recycling">Recycling bin</string>
-    <string name="bin_recycling_short">Recycling</string>
+    <string name="bin_recycling">Mixed recycling bin</string>
+    <string name="bin_recycling_short">Mixed recycling</string>
     <string name="bin_glass">Glass recycling</string>
     <string name="bin_glass_short">Glass recycling</string>
-    <string name="bin_food">Food waste caddy</string>
-    <string name="bin_food_short">Food caddy</string>
-    <string name="bin_garden">Garden waste bin</string>
-    <string name="bin_garden_short">Garden waste</string>
+    <string name="bin_food">Food or garden bin</string>
+    <string name="bin_food_short">Food / garden</string>
+    <string name="bin_special">Special collection point</string>
+    <string name="bin_special_short">Special collection</string>
     <string name="bin_textile">Textile bank</string>
     <string name="bin_textile_short">Textile bank</string>
     <string name="bin_general">General waste</string>
     <string name="bin_general_short">General waste</string>
 
-    <!-- Disposal advice (until Llama answers come from the Pi) -->
-    <string name="advice_cardboard">Flatten boxes and remove tape and polystyrene. Keep it dry — wet or greasy cardboard can\'t be recycled.</string>
-    <string name="advice_paper">Keep it clean and dry. Shredded paper, tissues and greasy paper usually aren\'t accepted.</string>
-    <string name="advice_plastic">Empty and rinse bottles, tubs and trays. Soft plastic film often needs a supermarket drop-off.</string>
-    <string name="advice_metal">Rinse cans and tins. Scrunch clean foil into a ball. Empty aerosols are usually accepted.</string>
+    <!-- Built-in advice (used when the Pi sends no steps, or after a correction) -->
+    <string name="advice_paper_card">Remove tape and plastic parts and flatten boxes. Keep it clean and dry. Greasy or wet paper and card cannot be recycled.</string>
+    <string name="advice_plastic">Empty, rinse and put the lid back on. Soft plastic film and bags often need a supermarket drop-off point.</string>
+    <string name="advice_metal">Empty and rinse cans and tins. Scrunch clean foil into a ball. Empty aerosols are usually accepted.</string>
     <string name="advice_glass">Rinse bottles and jars and take the lids off. No drinking glasses, Pyrex or window glass.</string>
-    <string name="advice_food_organics">Scrape it into your food caddy. Line it with a compostable bag or newspaper — never plastic.</string>
-    <string name="advice_vegetation">Use your garden waste bin if you have one. No soil, stones, plastic pots or food.</string>
-    <string name="advice_textile_trash">Not for household recycling. Donate wearable items, or take worn-out fabric to a textile bank.</string>
-    <string name="advice_misc_trash">This can\'t be recycled at home. Bag it and put it in your general waste bin.</string>
+    <string name="advice_food_garden">Scrape food into your food caddy, lined with a compostable bag, never plastic. Garden waste goes in the garden bin or compost. No soil, stones or plastic pots.</string>
+    <string name="advice_textile">Not for household recycling. Donate wearable items, or take worn-out fabric to a textile bank.</string>
+    <string name="advice_special">Never put batteries or electricals in any bin. Take batteries to a shop or council collection point, and electricals to a retailer take-back or your recycling centre.</string>
+    <string name="advice_general">This cannot be recycled at home. Bag it and put it in your general waste bin.</string>
 
     <!-- WhatsApp -->
     <string name="share_whatsapp">Share on WhatsApp</string>
@@ -140,7 +152,31 @@
     <string name="timing_phone">Phone pipeline: %1$d ms</string>
     <string name="pi_address_title">Pi address</string>
     <string name="pi_address_hint">The Pi\'s IP address (run hostname -I on the Pi). Phone and Pi must be on the same Wi-Fi or hotspot.</string>
+    <string name="pi_token_hint">Llama token (from ~/.verde_llama_token on the Pi)</string>
+    <string name="chip_engine_phone">🦙 Llama: this phone</string>
+    <string name="chip_engine_pi">🦙 Llama: Raspberry Pi</string>
+    <string name="engine_phone">this phone</string>
+    <string name="engine_pi">the Raspberry Pi</string>
+    <string name="llama_no_answer">Llama on %1$s did not answer, so here is Verde\'s built-in answer.</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="benchmark_title">Verde Benchmark</string>
+    <string name="mode_on_device">Phone-only mode: the model runs on this phone</string>
+    <string name="mode_via_pi">Phone + Pi mode: the photo is sent to the Pi</string>
+    <string name="model_failed">Couldn\'t classify the photo on this phone, please try again</string>
+
+    <!-- WhatsApp (Meta Cloud API) -->
+    <string name="send_to_my_whatsapp">Send to my WhatsApp</string>
+    <string name="sending">Sending…</string>
+    <string name="my_whatsapp_title">Your WhatsApp number</string>
+    <string name="my_whatsapp_hint">With country code, e.g. +44 7700 900123</string>
+    <string name="whatsapp_sent">Sent to your WhatsApp ✓</string>
+    <string name="whatsapp_say_hi_first">Say hi to Verde on WhatsApp first, then try again (WhatsApp only lets Verde message you after you message it).</string>
+    <string name="whatsapp_send_failed">Couldn\'t send. Is the WhatsApp server running?</string>
+
+    <!-- Llama on the Pi (ExecuTorch) -->
+    <string name="llama_writing">Llama is writing advice…</string>
+
+    <string name="answer_bulky">Too big for your bins. Take it to a household waste recycling centre or book your council\'s bulky waste collection. If it\'s in good condition, donate or sell it.</string>
+
 </resources>

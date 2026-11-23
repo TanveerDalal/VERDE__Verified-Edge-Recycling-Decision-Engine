@@ -29,6 +29,7 @@
     <color name="bin_garden">#D9A877</color>
     <color name="bin_textile">#B48CFF</color>
     <color name="bin_general">#B4BFB9</color>
+    <color name="bin_special">#FF8A65</color>
 
     <!-- Pi status -->
     <color name="verde_offline">#FF9A90</color>

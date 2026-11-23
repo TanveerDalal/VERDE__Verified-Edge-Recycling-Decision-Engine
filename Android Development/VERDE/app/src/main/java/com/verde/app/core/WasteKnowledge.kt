@@ -5,8 +5,9 @@ import androidx.annotation.StringRes
 import com.verde.app.R
 
 /**
- * Answers for the Ask chat, based on keywords in the question.
- * TODO: replace with Llama running on the Pi once it's available.
+ * Verde's checked UK recycling facts, found by keywords in the question.
+ * Used two ways: as the answer when Llama isn't available, and as the FACT we give
+ * Llama with every question, so a small model explains correct advice instead of guessing.
  */
 object WasteKnowledge {
 
@@ -20,19 +21,25 @@ object WasteKnowledge {
     )
 
     private val classKeywords: Map<WasteClass, Set<String>> = mapOf(
-        WasteClass.CARDBOARD to setOf("cardboard", "box", "boxes", "carton"),
-        WasteClass.PAPER to setOf("paper", "newspaper", "magazine", "envelope", "envelopes"),
+        WasteClass.PAPER_CARD to setOf("cardboard", "box", "boxes", "carton", "paper", "newspaper", "magazine", "envelope", "envelopes"),
         WasteClass.PLASTIC to setOf("plastic", "bottle", "bottles", "tub", "tubs", "tray", "trays"),
         WasteClass.METAL to setOf("metal", "can", "cans", "tin", "tins", "foil", "aerosol"),
         WasteClass.GLASS to setOf("glass", "jar", "jars"),
-        WasteClass.FOOD_ORGANICS to setOf("food", "peel", "peels", "leftovers", "banana", "apple"),
-        WasteClass.VEGETATION to setOf("garden", "grass", "leaves", "plant", "plants", "branches"),
-        WasteClass.TEXTILE_TRASH to setOf("clothes", "textile", "textiles", "fabric", "shoes", "towel")
+        WasteClass.FOOD_GARDEN to setOf("food", "peel", "peels", "leftovers", "banana", "apple", "garden", "grass", "leaves", "plant", "plants", "branches"),
+        WasteClass.TEXTILE to setOf("clothes", "textile", "textiles", "fabric", "shoes", "towel")
     )
 
     private val greetings = setOf("hi", "hello", "hey")
 
     fun answer(context: Context, question: String): String {
+        fact(context, question)?.let { return it }
+        val words = question.lowercase().split(Regex("[^a-z]+")).toSet()
+        @StringRes val fallback = if (greetings.any(words::contains)) R.string.answer_hello else R.string.answer_unknown
+        return context.getString(fallback)
+    }
+
+    /** The checked fact for this question, or null if Verde has none (then Llama answers alone). */
+    fun fact(context: Context, question: String): String? {
         val words = question.lowercase().split(Regex("[^a-z]+")).toSet()
 
         specialAnswers.firstOrNull { (keys, _) -> keys.any(words::contains) }
@@ -41,8 +48,7 @@ object WasteKnowledge {
         classKeywords.entries.firstOrNull { (_, keys) -> keys.any(words::contains) }
             ?.let { return describe(context, it.key) }
 
-        @StringRes val fallback = if (greetings.any(words::contains)) R.string.answer_hello else R.string.answer_unknown
-        return context.getString(fallback)
+        return null
     }
 
     /** "Glass → Glass recycling. Rinse bottles and jars…" */

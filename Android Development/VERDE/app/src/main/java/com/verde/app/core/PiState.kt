@@ -19,5 +19,6 @@ suspend fun askPiState(address: String): PiState = try {
 } catch (e: CancellationException) {
     throw e                 // the screen closed: stop quietly
 } catch (e: Exception) {
-    PiState.OFFLINE         // no Wi-Fi, wrong address, server.py not running…
+    android.util.Log.e("VERDE", "Pi check failed for $address", e)
+    PiState.OFFLINE
 }

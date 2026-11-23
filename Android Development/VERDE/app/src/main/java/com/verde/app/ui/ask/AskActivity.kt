@@ -3,13 +3,15 @@ package com.verde.app.ui.ask
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.format.DateFormat
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.verde.app.R
+import com.verde.app.core.LlamaClient
+import com.verde.app.core.LlamaServer
+import com.verde.app.core.PiSettings
 import com.verde.app.core.WasteKnowledge
 import com.verde.app.databinding.ActivityAskBinding
 import com.verde.app.databinding.ItemMessageBotBinding
@@ -19,14 +21,17 @@ import com.verde.app.ui.common.WhatsApp
 import com.verde.app.ui.common.setUpBottomNav
 import com.verde.app.ui.common.setUpDarkScreen
 import com.verde.app.ui.common.openTab
+import kotlinx.coroutines.launch
 import java.util.Date
 
-/** Ask tab: a WhatsApp-style chat. Answers come from WasteKnowledge (later: Llama on the Pi). */
+/**
+ * Ask tab: a WhatsApp-style chat. Answers come from Llama on this phone (ExecuTorch),
+ * then Llama on the Pi, then the built-in WasteKnowledge answers.
+ */
 class AskActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_QUESTION = "question"
-        private const val REPLY_DELAY_MS = 900L
 
         /** Opens the chat and sends [question] straight away (used by "Ask Verde" on the Result screen). */
         fun newIntent(context: Context, question: String): Intent =
@@ -36,7 +41,6 @@ class AskActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityAskBinding
-    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +49,17 @@ class AskActivity : AppCompatActivity() {
         setUpDarkScreen(binding.root)
         setUpBottomNav(binding.bottomNav, Tab.ASK)
 
+        // Lets the WhatsApp server use this phone's Llama (port 5001, see LlamaServer)
+        com.verde.app.core.LlamaService.start(this)
+
         addBotMessage(getString(R.string.ask_welcome))
+
+        // Switch: Llama on this phone or on the Pi (tap to change)
+        showEngine()
+        binding.chipEngine.setOnClickListener {
+            PiSettings.setLlamaOnPhone(this, !PiSettings.llamaOnPhone(this))
+            showEngine()
+        }
 
         binding.sendButton.setOnClickListener { sendTyped() }
         binding.messageInput.setOnEditorActionListener { _, actionId, _ ->
@@ -70,11 +84,6 @@ class AskActivity : AppCompatActivity() {
         sendQuestionFrom(intent)
     }
 
-    override fun onDestroy() {
-        handler.removeCallbacksAndMessages(null)
-        super.onDestroy()
-    }
-
     private fun sendQuestionFrom(intent: Intent) {
         val question = intent.getStringExtra(EXTRA_QUESTION) ?: return
         intent.removeExtra(EXTRA_QUESTION)           // don't send it twice
@@ -88,17 +97,25 @@ class AskActivity : AppCompatActivity() {
         send(text)
     }
 
-    /** Shows the user's message, then "typing…", then Verde's answer. */
+    /** Shows the user's message, then "typing…" while Llama thinks, then Verde's answer. */
     private fun send(text: String) {
         addUserMessage(text)
         binding.statusText.setText(R.string.ask_typing)
         val typing = addBotMessage(getString(R.string.ask_typing_bubble), showTime = false)
 
-        handler.postDelayed({
+        lifecycleScope.launch {
+            val llama = LlamaClient.ask(this@AskActivity, text)          // phone Llama → Pi Llama → null
             binding.messages.removeView(typing)
             binding.statusText.setText(R.string.ask_online)
-            addBotMessage(WasteKnowledge.answer(this, text))    // TODO: Llama on the Pi
-        }, REPLY_DELAY_MS)
+            addBotMessage(llama ?: (getString(R.string.llama_no_answer,
+                getString(if (PiSettings.llamaOnPhone(this@AskActivity)) R.string.engine_phone else R.string.engine_pi)) +
+                    "\n\n" + WasteKnowledge.answer(this@AskActivity, text)))
+        }
+    }
+
+    private fun showEngine() {
+        binding.chipEngine.setText(
+            if (PiSettings.llamaOnPhone(this)) R.string.chip_engine_phone else R.string.chip_engine_pi)
     }
 
     private fun addUserMessage(text: String) {

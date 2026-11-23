@@ -1,5 +1,7 @@
 package com.verde.app.core
 
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
@@ -14,6 +16,7 @@ import androidx.core.content.ContextCompat
 import com.verde.app.camera.PhoneCaptureResult
 import com.verde.app.camera.capturePhoto
 import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * The phone's camera (CameraX) for the Home screen: live picture, back/front switch,
@@ -38,6 +41,8 @@ class PhoneCamera(private val activity: AppCompatActivity) {
     private val mainThread = ContextCompat.getMainExecutor(activity)
     private val worker = Executors.newSingleThreadExecutor()    // crop/resize/save off the main thread
     private var camera: Camera? = null
+    private var lastPreview: PreviewView? = null                 // to restart the camera after an error
+    private val handler = Handler(Looper.getMainLooper())
 
     /** Which camera to use: back (default, best for scanning) or front. */
     private var lensFacing = CameraSelector.LENS_FACING_BACK
@@ -46,6 +51,7 @@ class PhoneCamera(private val activity: AppCompatActivity) {
 
     /** Turns the selected camera on and shows it in [previewView]. Answers true if it started. */
     fun start(previewView: PreviewView, onResult: (started: Boolean) -> Unit = {}) {
+        lastPreview = previewView
         val providerFuture = ProcessCameraProvider.getInstance(activity)
         providerFuture.addListener({
             val started = runCatching {
@@ -90,12 +96,32 @@ class PhoneCamera(private val activity: AppCompatActivity) {
      * (224×224 image, saved file, timings), or null if it failed.
      */
     fun takePhoto(onResult: (PhoneCaptureResult?) -> Unit) {
+        // Camera closed (e.g. after the Result screen, or a camera error)? Restart it and
+        // answer null, so the Scan button comes back instead of waiting forever.
+        if (camera == null) {
+            lastPreview?.let { start(it) }
+            mainThread.execute { onResult(null) }
+            return
+        }
+
+        // Answer exactly once: the photo, a failure, or a time-out if the camera got stuck
+        val answered = AtomicBoolean(false)
+        lateinit var timeout: Runnable
+        fun answer(result: PhoneCaptureResult?) {
+            if (!answered.compareAndSet(false, true)) return
+            handler.removeCallbacks(timeout)
+            if (result == null) lastPreview?.let { start(it) }    // restart for the next try
+            onResult(result)
+        }
+        timeout = Runnable { answer(null) }
+        handler.postDelayed(timeout, 15_000)
+
         capturePhoto(
             context = activity,
             imageCapture = imageCapture,
             executor = worker,
-            onResult = { result -> mainThread.execute { onResult(result) } },
-            onFailure = { mainThread.execute { onResult(null) } }
+            onResult = { result -> mainThread.execute { answer(result) } },
+            onFailure = { mainThread.execute { answer(null) } }
         )
     }
 }

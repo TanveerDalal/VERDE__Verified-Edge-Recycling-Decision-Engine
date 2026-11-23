@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- History + Impact tabs -->
+<resources>
+    <!-- History -->
+    <string name="history_title">History</string>
+    <string name="history_subtitle">%1$d scans · %2$d corrected by you</string>
+    <string name="history_clear">Clear</string>
+    <string name="history_filter_all">All</string>
+    <string name="history_today">Today</string>
+    <string name="history_yesterday">Yesterday</string>
+    <string name="history_badge_corrected">✓ Corrected</string>
+    <string name="history_badge_unsure">Not sure</string>
+    <string name="history_source_line">%1$s · %2$s</string>
+    <string name="history_empty_title">No scans yet</string>
+    <string name="history_empty_text">Every item you scan is saved here with its photo, the bin and the time.</string>
+    <string name="history_empty_filter">No scans in this bin yet.</string>
+    <string name="history_clear_title">Clear all history?</string>
+    <string name="history_clear_text">This deletes every saved scan and photo on this phone. Your Impact numbers will start from zero.</string>
+    <string name="history_delete_title">Delete this scan?</string>
+    <string name="history_deleted">Scan deleted</string>
+    <string name="delete">Delete</string>
+    <string name="scan_an_item">Scan an item</string>
+    <string name="cd_scan_photo">Photo of the scanned item</string>
+
+    <!-- Impact -->
+    <string name="impact_title">Your impact</string>
+    <string name="impact_subtitle">Everything Verde has sorted on this phone</string>
+    <string name="impact_ring_label">kept out of landfill</string>
+    <string name="impact_kept_out">%1$d of %2$d items</string>
+    <string name="impact_kept_out_hint">recycled, composted or collected safely instead of going to general waste</string>
+    <string name="impact_scans">Items scanned</string>
+    <string name="impact_scans_hint">since you started</string>
+    <string name="impact_co2">CO₂ saved</string>
+    <string name="impact_co2_value">%1$.2f kg</string>
+    <string name="impact_co2_hint">estimate</string>
+    <string name="impact_ai">AI agreed</string>
+    <string name="impact_ai_hint">%1$d corrected by you</string>
+    <string name="impact_speed">Model speed</string>
+    <string name="impact_speed_value">%1$d ms</string>
+    <string name="impact_speed_none">–</string>
+    <string name="impact_speed_hint">on this phone · ExecuTorch</string>
+    <string name="impact_equal_title">That\'s about the same as…</string>
+    <string name="impact_car">🚗  not driving %1$.1f km in a petrol car</string>
+    <string name="impact_phone">🔋  charging a phone %1$d times</string>
+    <string name="impact_bins_title">Most common bin</string>
+    <string name="impact_top_bin">%1$s</string>
+    <string name="impact_top_bin_detail">%1$d items · %2$d%% of your scans</string>
+    <string name="impact_bin_count">%1$d</string>
+    <string name="impact_week_title">Last 7 days</string>
+    <string name="impact_streak">🔥 %1$d-day streak</string>
+    <string name="impact_streak_none">Scan something today to start a streak</string>
+    <string name="impact_empty_title">Your impact starts with one scan</string>
+    <string name="impact_empty_text">Scan an item and Verde will count what you keep out of landfill and the CO₂ you save.</string>
+    <string name="impact_footnote">CO₂ figures are estimates per item (average weight × typical UK recycling savings, WRAP / DEFRA). Corrected scans count as the bin you chose.</string>
+</resources>

@@ -44,6 +44,18 @@ class ScanHistory(context: Context) {
         save(all().map { if (it.id == id) it.correctedTo(wasteClass) else it })
     }
 
+    /** Saves a changed record (e.g. after Llama wrote its advice). */
+    fun update(record: ScanRecord) {
+        save(all().map { if (it.id == record.id) record else it })
+    }
+
+    /** Removes one scan and its photo (long-press in History). */
+    fun delete(id: Long) {
+        val records = all()
+        records.firstOrNull { it.id == id }?.let { File(it.photoPath).delete() }
+        save(records.filter { it.id != id })
+    }
+
     fun clear() {
         all().forEach { File(it.photoPath).delete() }
         prefs.edit { remove(KEY_RECORDS) }
@@ -64,6 +76,8 @@ class ScanHistory(context: Context) {
         .put("warnings", JSONArray(record.answer.warnings))
         .put("why", record.answer.whyItMatters)
         .put("timeMs", record.answer.timeMs)
+        .put("inferenceMs", record.answer.inferenceMs)
+        .put("guesses", JSONArray(record.answer.guesses.map { "${it.wasteClass.name}:${it.percent}" }))
         .put("photo", record.photoPath)
         .put("fromPi", record.fromPi)
         .put("corrected", record.corrected)
@@ -76,7 +90,12 @@ class ScanHistory(context: Context) {
             steps = json.optJSONArray("steps").toStrings(),
             warnings = json.optJSONArray("warnings").toStrings(),
             whyItMatters = json.optString("why").ifEmpty { null },
-            timeMs = if (json.has("timeMs")) json.getLong("timeMs") else null
+            timeMs = if (json.has("timeMs")) json.getLong("timeMs") else null,
+            inferenceMs = if (json.has("inferenceMs")) json.getLong("inferenceMs") else null,
+            guesses = json.optJSONArray("guesses").toStrings().mapNotNull { text ->
+                val (name, percent) = text.split(":").let { it[0] to it.getOrNull(1)?.toIntOrNull() }
+                runCatching { Guess(WasteClass.valueOf(name), percent ?: 0) }.getOrNull()
+            }
         )
         ScanRecord(
             id = json.getLong("id"),

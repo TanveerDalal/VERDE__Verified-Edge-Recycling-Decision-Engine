@@ -1,14 +1,22 @@
 package com.verde.app.ui.home
 
 import android.Manifest
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.ExifInterface
+import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.text.format.DateUtils
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +25,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.verde.app.MainActivity
+import com.verde.app.camera.rotate
 import com.verde.app.R
 import com.verde.app.core.Classifier
 import com.verde.app.core.PhoneCamera
@@ -57,6 +66,12 @@ class HomeActivity : AppCompatActivity() {
     private var piState = PiState.CHECKING      // what we last heard from the Pi
 
     // Android's "Allow camera?" pop-up
+    // Android's photo picker: choose a photo from the gallery (no storage permission needed)
+    private val galleryPicker =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) scanFromGallery(uri)
+        }
+
     private val cameraPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) startPhoneCamera()
@@ -72,6 +87,9 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpDarkScreen(binding.root)
         setUpBottomNav(binding.bottomNav, Tab.SCAN)
+        // Start the phone's server (port 5001) as soon as Verde opens, so WhatsApp photos and
+        // questions work without visiting the Ask tab first
+        com.verde.app.core.LlamaService.start(this)
 
         binding.feedBox.clipToOutline = true      // keep pictures inside the rounded box
         piLive = PiLiveView(this, binding.piFeed) { if (usingPi) checkPi() }   // stream stopped → re-check
@@ -79,6 +97,23 @@ class HomeActivity : AppCompatActivity() {
         binding.togglePi.setOnClickListener { selectPiCamera() }
         binding.togglePhone.setOnClickListener { selectPhoneCamera() }
         binding.scanButton.setOnClickListener { scan() }
+        binding.galleryButton.setOnClickListener {
+            galleryPicker.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        // Long-press "Scan item" = who recognises the picture: this phone's model ⇄ the Pi
+        binding.scanButton.setOnLongClickListener {
+            val onDevice = !PiSettings.onDevice(this)
+            PiSettings.setOnDevice(this, onDevice)
+            toast(if (onDevice) R.string.mode_on_device else R.string.mode_via_pi)
+            true
+        }
+
+        // Load the image model in the background so the first scan isn't slow
+        lifecycleScope.launch(Dispatchers.Default) {
+            runCatching { Classifier.warmUp(applicationContext) }
+                .onFailure { Log.e("VERDE", "Could not load model_b0.pte", it) }
+        }
         binding.flipButton.setOnClickListener { flipCamera() }           // back ⇄ front camera
 
         // Tap the pill = check the Pi again · long-press = change the Pi's address
@@ -96,6 +131,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         binding.greeting.setText(greetingForNow())
+        binding.scanButton.isEnabled = true                // ready for the next item
+        binding.galleryButton.isEnabled = true
         showLastScan()
         // Turn the phone camera back on when returning from another screen
         if (!usingPi && hasCameraPermission()) startPhoneCamera()
@@ -179,12 +216,25 @@ class HomeActivity : AppCompatActivity() {
             inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
             setSelection(text.length)
         }
+        val token = EditText(this).apply {
+            setText(PiSettings.llamaToken(this@HomeActivity))
+            setHint(R.string.pi_token_hint)
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+        val form = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            val pad = (20 * resources.displayMetrics.density).toInt()
+            setPadding(pad, 0, pad, 0)
+            addView(input)
+            addView(token)
+        }
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.pi_address_title)
             .setMessage(R.string.pi_address_hint)
-            .setView(input)
+            .setView(form)
             .setPositiveButton(R.string.save) { _, _ ->
                 PiSettings.setAddress(this, input.text.toString())
+                PiSettings.setLlamaToken(this, token.text.toString())
                 selectPiCamera()                          // reconnect with the new address
             }
             .setNegativeButton(R.string.cancel, null)
@@ -204,10 +254,29 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /**
-     * The Pi takes the photo AND answers (team's PiRepository.scan → POST /scan).
+     * Pi camera. Phone model ON (default): the Pi's live picture is recognised by the
+     * ExecuTorch model on this phone. Phone model OFF: the Pi answers (team's POST /scan).
      * The photo shown on Result is the last frame of the live view.
      */
     private fun scanWithPi() {
+        if (PiSettings.onDevice(this) && piLive.saveLastFrame(piPhotoFile)) {
+            lifecycleScope.launch {
+                try {
+                    val answer = withContext(Dispatchers.Default) {
+                        val picture = android.graphics.BitmapFactory.decodeFile(piPhotoFile.path)
+                            ?: error("no Pi picture")
+                        Classifier.classify(applicationContext, picture)
+                    }
+                    openResult(answer, piPhotoFile, fromPi = true)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    Log.e("VERDE", "Pi picture scan failed", e)
+                    scanFailed(R.string.model_failed)
+                }
+            }
+            return
+        }
         lifecycleScope.launch {
             try {
                 val pi = PiRepository(piAddress)
@@ -223,11 +292,83 @@ class HomeActivity : AppCompatActivity() {
     }
 
     /** Phone: team pipeline (224×224 crop + full photo to VERDE_captures), then the classifier. */
+    /** Phone camera: classify on the phone (default) or send the photo to the Pi. */
     private fun scanWithPhone() {
         phoneCamera.takePhoto { photo ->
-            if (photo == null) scanFailed(R.string.photo_failed)
-            else openResult(Classifier.classify(photo), photo.file, fromPi = false)
+            if (photo == null) {
+                scanFailed(R.string.photo_failed)
+            } else {
+                val onDevice = PiSettings.onDevice(this)
+                lifecycleScope.launch {
+                    try {
+                        val answer = if (onDevice) {
+                            withContext(Dispatchers.Default) { Classifier.classify(applicationContext, photo) }
+                        } else {
+                            PiRepository(piAddress).classify(photo.file).toAnswer()
+                        }
+                        openResult(answer, photo.file, fromPi = false)
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Exception) {
+                        Log.e("VERDE", "Phone scan failed", e)
+                        scanFailed(if (onDevice) R.string.model_failed else R.string.pi_not_connected)
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * Gallery photo → the same on-phone ExecuTorch model as the camera → Result screen.
+     * The photo is turned upright (EXIF), then the model takes its centre square at 224×224.
+     */
+    private fun scanFromGallery(uri: Uri) {
+        binding.scanButton.isEnabled = false
+        binding.galleryButton.isEnabled = false
+        lifecycleScope.launch {
+            try {
+                val (answer, file) = withContext(Dispatchers.Default) {
+                    val start = System.nanoTime()
+                    val picture = loadGalleryPhoto(uri) ?: error("could not read the photo")
+                    val file = File(cacheDir, "gallery_scan.jpg")
+                    file.outputStream().use { picture.compress(Bitmap.CompressFormat.JPEG, 90, it) }
+                    val loadMs = (System.nanoTime() - start) / 1_000_000
+                    Classifier.classify(applicationContext, picture, loadMs, "gallery") to file
+                }
+                binding.galleryButton.isEnabled = true
+                openResult(answer, file, fromPi = false)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e("VERDE", "Gallery scan failed", e)
+                binding.galleryButton.isEnabled = true
+                scanFailed(R.string.gallery_failed)
+            }
+        }
+    }
+
+    /** Reads a gallery photo at about 1–2 thousand pixels (not the full size) and turns it upright. */
+    private fun loadGalleryPhoto(uri: Uri): Bitmap? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
+        var sample = 1
+        while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= 1024) sample *= 2
+
+        val bitmap = contentResolver.openInputStream(uri)?.use {
+            BitmapFactory.decodeStream(it, null, BitmapFactory.Options().apply { inSampleSize = sample })
+        } ?: return null
+
+        val degrees = runCatching {
+            contentResolver.openInputStream(uri)?.use {
+                when (ExifInterface(it).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+                    ExifInterface.ORIENTATION_ROTATE_90 -> 90
+                    ExifInterface.ORIENTATION_ROTATE_180 -> 180
+                    ExifInterface.ORIENTATION_ROTATE_270 -> 270
+                    else -> 0
+                }
+            }
+        }.getOrNull() ?: 0
+        return rotate(bitmap, degrees)
     }
 
     /** Saves the scan to history and opens the Result screen. */
@@ -239,6 +380,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun scanFailed(@StringRes message: Int) {
         binding.scanButton.isEnabled = true
+        binding.galleryButton.isEnabled = true
         toast(message)
     }
 

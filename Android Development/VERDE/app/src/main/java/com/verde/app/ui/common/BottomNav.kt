@@ -6,16 +6,18 @@ import android.graphics.Typeface
 import com.verde.app.R
 import com.verde.app.databinding.BottomNavBinding
 import com.verde.app.ui.ask.AskActivity
+import com.verde.app.ui.history.HistoryActivity
 import com.verde.app.ui.home.HomeActivity
+import com.verde.app.ui.impact.ImpactActivity
 
 /**
  * The four tabs in the bottom bar and the screen each one opens.
- * Impact and History have no screen yet (null) — tapping them shows "Coming soon".
+ * A tab with no screen (null) shows "Coming soon" when tapped.
  */
 enum class Tab(val screen: Class<out Activity>?) {
     SCAN(HomeActivity::class.java),
-    IMPACT(null),
-    HISTORY(null),
+    IMPACT(ImpactActivity::class.java),
+    HISTORY(HistoryActivity::class.java),
     ASK(AskActivity::class.java)
 }
 

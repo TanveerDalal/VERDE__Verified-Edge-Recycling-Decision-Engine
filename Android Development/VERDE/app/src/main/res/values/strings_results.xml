@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Result screen: the image model's top guesses and its on-device (ExecuTorch) timing -->
+<resources>
+    <string name="its_class_pct">It\'s %1$s (%2$d%%)</string>
+    <string name="uncertain_guesses">⚠ Verde isn\'t sure (%1$d%%). Is it %2$s? Tap the right one below.</string>
+    <string name="timing_phone_model">On this phone · ExecuTorch · model %1$d ms · total %2$d ms</string>
+    <string name="model_saw_title">What the model saw</string>
+    <string name="model_saw_hint">Every class, most likely first. Tap a bar if Verde got it wrong.</string>
+    <string name="percent_value">%1$d%%</string>
+    <string name="other_class">Other…</string>
+    <string name="choose_class">What is it?</string>
+    <string name="gallery">Gallery</string>
+    <string name="gallery_description">Choose a photo from the gallery</string>
+    <string name="gallery_failed">Couldn\'t read that photo, please try another one</string>
+</resources>

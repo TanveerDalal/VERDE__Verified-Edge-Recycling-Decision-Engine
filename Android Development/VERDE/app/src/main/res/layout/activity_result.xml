@@ -127,6 +127,44 @@
                 android:id="@+id/warningsText"
                 style="@style/Verde.WarningBox" />
 
+            <!-- What the model saw: one bar per class, best first (tap a bar to correct) -->
+            <LinearLayout
+                android:id="@+id/guessesCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/model_saw_title"
+                    android:textColor="@color/verde_text_main"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/model_saw_hint"
+                    android:textColor="@color/verde_text_faint"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:id="@+id/guessesBars"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
             <!-- Which bin (tap to open the bin guide) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/binCard"
@@ -250,6 +288,17 @@
                     android:textColor="@color/verde_text_advice"
                     android:textSize="15sp" />
 
+                <!-- "Llama is writing advice…" while the Pi's Llama answers -->
+                <TextView
+                    android:id="@+id/llamaStatusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/llama_writing"
+                    android:textColor="@color/verde_green_soft"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
                 <!-- Benchmark: how long the scan took (Pi round trip or phone pipeline) -->
                 <TextView
                     android:id="@+id/timingText"
@@ -261,11 +310,16 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <!-- Correction chips -->
-            <LinearLayout
+            <!-- Correction chips: the model's next guesses (scrolls sideways on small phones) -->
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
+                android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -281,6 +335,16 @@
                     style="@style/Verde.Chip" />
 
                 <TextView
+                    android:id="@+id/thirdChip"
+                    style="@style/Verde.Chip"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/otherChip"
+                    style="@style/Verde.Chip"
+                    android:text="@string/other_class" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -288,6 +352,7 @@
                     android:textColor="@color/verde_text_faint"
                     android:textSize="13sp" />
             </LinearLayout>
+            </HorizontalScrollView>
 
             <!-- Share this result with friends or family on WhatsApp -->
             <com.google.android.material.button.MaterialButton
@@ -298,6 +363,17 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/share_whatsapp"
                 app:icon="@drawable/ic_share"
+                app:iconTint="@color/verde_text_main" />
+
+            <!-- Verde sends this result to the user's own WhatsApp (Meta Cloud API, via our server) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sendToMeButton"
+                style="@style/Verde.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/send_to_my_whatsapp"
+                app:icon="@drawable/ic_chat"
                 app:iconTint="@color/verde_text_main" />
         </LinearLayout>
     </ScrollView>

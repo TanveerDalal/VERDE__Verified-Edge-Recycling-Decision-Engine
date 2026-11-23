@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Verde – 9 classes → UK bins guide -->
+<!-- Verde – 8 classes → UK bins guide -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/guideRoot"
@@ -45,6 +45,14 @@
                 android:textColor="@color/verde_text_muted"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/trainedOn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/verde_text_faint"
+                android:textSize="12sp" />
+
             <!-- Rows are added in code from the WasteClass list -->
             <LinearLayout
                 android:id="@+id/binRows"
@@ -52,6 +60,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:orientation="vertical" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/guide_not_sure"
+                android:textColor="@color/verde_text_faint"
+                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="match_parent"
